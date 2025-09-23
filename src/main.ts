@@ -1,4 +1,4 @@
-import { groundedAnswer, envSummary } from './gemini';
+import { generateAnswer, envSummary } from './gemini';
 import { KNOWLEDGE } from './knowledge';
 
 function $(id: string) {
@@ -22,8 +22,8 @@ async function onAsk() {
   askBtn.disabled = true;
   setText('final', '… thinking');
   try {
-    const { final } = await groundedAnswer(q, KNOWLEDGE);
-    setText('final', final);
+    const answer = await generateAnswer(q, KNOWLEDGE);
+    setText('final', answer);
   } catch (e: any) {
     const msg = e?.message || String(e);
     setText('final', `Error: ${msg}`);
@@ -33,7 +33,7 @@ async function onAsk() {
 }
 
 function init() {
-  const { model, keyLoaded } = envSummary();
+  const { model } = envSummary();
   setText('model', model);
   $('ask')!.addEventListener('click', onAsk);
   const textarea = document.getElementById('question') as HTMLTextAreaElement;

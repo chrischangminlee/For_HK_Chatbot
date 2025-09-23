@@ -1,4 +1,4 @@
-import type { GenerateOptions, ValidatorResult } from './types';
+import type { GenerateOptions } from './types';
 
 const DEFAULT_MODEL = (import.meta.env.VITE_GEMINI_MODEL as string) || 'gemini-2.5-flash';
 const API_HOST = (import.meta.env.VITE_GEMINI_API_HOST as string) || 'https://generativelanguage.googleapis.com';
@@ -16,7 +16,11 @@ function endpoint(model: string, apiKey: string) {
 
 function buildSystemPrompt(knowledge: string) {
   return [
-    'Knowledge Base에 기반하여 최대한 팩트에서 벗어나지 않은 체 답을 해주세요',
+    '너는 매우 엄격한 어시스턴트다.',
+    '아래 Knowledge Base에 포함된 사실만 사용해서 간결하게 답하라.',
+    '아래 정보에 근거가 없으면 정확히 다음 문장으로만 답하라:',
+    '"제공된 정보에 기반해선 알 수 없습니다."',
+    '',
     'Knowledge Base:',
     '---',
     knowledge.trim(),
@@ -78,76 +82,6 @@ export async function generateAnswer(
   return extractText(resp);
 }
 
-export async function validateAnswer(
-  question: string,
-  knowledge: string,
-  draftAnswer: string,
-  opts: GenerateOptions = {}
-): Promise<ValidatorResult> {
-  const apiKey = getApiKey(opts.apiKey);
-  if (!apiKey) throw new Error('Missing VITE_GEMINI_API_KEY. Set it in your env.');
-  const model = (opts.model || DEFAULT_MODEL).trim();
-  const url = endpoint(model, apiKey);
-
-  const instruction = [
-    'DRAFT ANSWER이 Knowledge Base 에 있는 내용과 일관된지 확인하세요.',
-    'Rules:',
-    '- Only accept statements present in the Knowledge Base.',
-    '- If any part is unsupported, set is_supported=false and list issues.',
-    '- If possible, provide adjusted_answer that is fully grounded.',
-    '',
-    'Return ONLY a compact JSON object with keys:',
-    '{ "is_supported": boolean, "issues": string[], "adjusted_answer": string|null, "confidence": number|null }',
-  ].join('\n');
-
-  const systemInstruction = { role: 'system', parts: [{ text: instruction + '\n\nKnowledge Base:\n---\n' + knowledge.trim() + '\n---' }] };
-
-  const body = {
-    systemInstruction,
-    contents: [
-      { role: 'user', parts: [{ text: [
-        `Question: ${question}`,
-        '',
-        'Draft Answer:',
-        draftAnswer
-      ].join('\n') }] }
-    ],
-    generationConfig: {
-      temperature: 0,
-      maxOutputTokens: 256,
-      responseMimeType: 'application/json'
-    }
-  } as const;
-
-  const resp = await postJSON(url, body);
-  const text = extractText(resp);
-  try {
-    const parsed = JSON.parse(text) as ValidatorResult;
-    return {
-      is_supported: Boolean(parsed.is_supported),
-      issues: Array.isArray(parsed.issues) ? parsed.issues : [],
-      adjusted_answer: typeof parsed.adjusted_answer === 'string' ? parsed.adjusted_answer : null,
-      confidence: typeof parsed.confidence === 'number' ? parsed.confidence : null
-    };
-  } catch (e) {
-    return { is_supported: false, issues: ['Validator returned non-JSON or invalid JSON.'], adjusted_answer: null, confidence: null };
-  }
-}
-
-export async function groundedAnswer(
-  question: string,
-  knowledge: string,
-  opts: GenerateOptions = {}
-): Promise<{ draft: string; validation: ValidatorResult; final: string }>{
-  const draft = await generateAnswer(question, knowledge, opts);
-  const validation = await validateAnswer(question, knowledge, draft, opts);
-  let final = draft;
-  if (!validation.is_supported) {
-    final = validation.adjusted_answer || "I don't know based on the provided information.";
-  }
-  return { draft, validation, final };
-}
-
 export function envSummary() {
   const key = getApiKey();
   return {
@@ -155,4 +89,3 @@ export function envSummary() {
     keyLoaded: key.length > 0
   };
 }
-

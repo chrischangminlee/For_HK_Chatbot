@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>HK사업관리 레츠고</title>
     <meta name="theme-color" content="#ff1f8a" />
-    <meta name="description" content="Two-step grounded chatbot using Gemini." />
+    <meta name="description" content="Knowledge-grounded chatbot using Gemini." />
     <link rel="icon" href="data:," />
   </head>
   <body>
@@ -20,7 +20,7 @@
       <p class="subnote">고객사 명, 고객사 특정 업무 과정 등은 전혀 포함되지않은 일반적인  사업관리 내용만 넣었기떄문에 보안 이슈는 없습니다.</p>
 
       <section class="panel">
-        <details open>
+        <details id="tips-details">
           <summary>이런 질문을 해보세요:</summary>
           <ul class="tips">
             <li>사업관리 업무는 무엇이 있나요?</li>
@@ -113,13 +113,10 @@
     button:hover { filter: brightness(1.05); box-shadow: 0 12px 26px -8px color-mix(in oklab, var(--primary) 55%, transparent); }
     button:active { transform: translateY(1px); }
     button:disabled { opacity: 0.6; cursor: not-allowed; }
-    .col h3 { margin: 0 0 8px 0; font-size: 16px; }
     .box { min-height: 80px; border: 1px dashed color-mix(in oklab, var(--primary) 35%, canvas); border-radius: 12px; padding: 12px; white-space: pre-wrap; background: color-mix(in oklab, canvas 98%, var(--primary) 3%); }
-    .mono { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; font-size: 13px; }
-    .kb { max-height: 240px; overflow: auto; background: canvas; border: 1px solid color-mix(in oklab, var(--primary) 30%, canvas); border-radius: 10px; padding: 10px; }
-    .tips { margin: 10px 0 0 0; padding-left: 18px; line-height: 1.7; }
+    .tips { margin: 10px 0 0 0; padding-left: 18px; line-height: 1.7; font-size: 13px; }
     .tips li { margin: 2px 0; }
     code { background: color-mix(in oklab, var(--primary) 16%, canvas); padding: 2px 6px; border-radius: 6px; }
-    @media (max-width: 760px) { .results { grid-template-columns: 1fr; } h1 { font-size: 24px; } }
+    @media (max-width: 760px) { h1 { font-size: 24px; } }
   </style>
 </html>

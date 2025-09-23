@@ -1,6 +1,6 @@
 **HK사업관리 레츠고**
 
-- Purpose: Two-call chatbot that (1) drafts an answer strictly from a provided knowledge base and (2) validates that draft is supported, blocking ungrounded answers.
+- Purpose: Single-call chatbot that answers strictly from a provided Knowledge Base (guardrailed via the system prompt).
 - Stack: Vite (vanilla TS), REST calls to Gemini (`model: gemini-2.5-flash`).
 
 **Quick Start**
@@ -10,9 +10,7 @@
 - Run: `npm install` then `npm run dev`.
 
 **Two-Step Flow**
-- Step 1 (Draft): `src/gemini.ts#generateAnswer` uses a system prompt that enforces “only use Knowledge Base; otherwise say I don't know”.
-- Step 2 (Validate): `src/gemini.ts#validateAnswer` asks Gemini to return strict JSON verdict (`is_supported`, `issues`, `adjusted_answer`).
-- UI shows both; when “Block ungrounded answers” is on, final output uses `adjusted_answer` or a fallback refusal.
+This app uses a single model call with a strict system prompt to keep responses grounded to the Knowledge Base.
 
 **Security Note**
 - Client-side API keys are exposed in bundled JS for static hosting (GitHub Pages). If you must ship a key:
@@ -41,4 +39,4 @@
 **Troubleshooting**
 - 400/401 errors: Confirm `VITE_GEMINI_API_KEY` and model name are valid.
 - CORS: Gemini endpoints support CORS; check referrer restrictions on your key.
-- Blank validation: Validator returns non-JSON if the model ignores JSON; we request `responseMimeType: application/json` to reduce this.
+If the answer is not in your Knowledge Base, the system prompt guides the model to say "제공된 정보에 기반해선 알 수 없습니다." Update the wording in `src/gemini.ts` if you prefer a different fallback.

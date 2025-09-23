@@ -4,9 +4,6 @@
   "version": "0.1.0",
   "license": "UNLICENSED",
   "type": "commonjs",
-  "engines": {
-    "node": "22.x"
-  },
   "dependencies": {
     "@google/generative-ai": "^0.17.0"
   }

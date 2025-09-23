@@ -2,9 +2,5 @@
   "version": 2,
   "buildCommand": "npm install && npm --prefix web install && npm --prefix web run build",
   "outputDirectory": "web/dist",
-  "functions": {
-    "api/**/*.js": {
-      "runtime": "@vercel/node@2.15.10"
-    }
-  }
+  
 }

@@ -1,16 +1,25 @@
 // Replace the contents of KNOWLEDGE with your source material.
 // Keep it concise; the validator enforces answers are grounded only in this.
 export const KNOWLEDGE = `
-Replace this block with your knowledge base. Keep it short and factual.
-
-Example structure:
-- Product: Acme Turbo Blender 3000
-- Warranty: 2 years from purchase date (receipt required)
-- Support Email: support@example.com
-- Opening Hours: Mon–Fri, 9am–5pm PT
+1. 사업관리 업무범위는 다음과 같음 : 프로젝트 관리, 범위/변경관리, 조직/인력관리, 일정/진척관리, 산출물관리, 의사소통관리, 이슈/리스크 관리, 테스트 관리 
+2. 매일 해야하는 업무 : 출석부 관리, 일정관리 
+3. 매주 해야하는 업무 : 주간보고 자료 취합 및 작성, 주간보고 회의록 발송
+4. 매달 해야하는 업무 : 출석부 생성, 주간보고 회의실 예약
+5. 수시적으로 해야하는 업무 : 현업 승인 필요 업무, 연차관리, 신규입사자 온보딩, 퇴사자 오프보딩
+6. 출석부 관리 업무 상세 : 매일 해야하며, “인력 일별 관리” 파일의 “인력 관리 실제 탭”에서 작업됨 
+7. 일정 관리 업무 상세 : 매일 해야하며, “WBS” 파일에서 일정과 산출물의 계획 대비 실제 진척률을 확인한다. 
+8. 주간보고 자료 취합 업무 상세 : 매주 해야하며, 주간보고 폴더에 매주 작업되며, 주간보고 전날 오전 11시까지 PL들이 작성한 내용을 합친다. 
+9. 주간보고 자료 작성 업무 상세 : 매주 해야하며, 주간보고 전날 작업한다. “일정 계획슬라이드, 산출물 일정, 투입인력 현황, 파트별 진척 현황, Action Items 현황, 이슈/리스크 현황”을 업데이트한다. 자세한 사항은 인수인계서 참고 
+10. 주간보고 회의록 발송 업무 상세 : 매주 해야하며, 주간보고 직후 작업하여 파트너님 검토를 받고 현업에 공유한다. 
+11. 출석부 생성 업무 상세 : 매달 해야하며, “인력 일별 관리” 파일의 “인력관리 - 출석부 탭”의 D2 날짜를 업데이트하여 프린트한다. 
+12. 주간보고 회의실 예약 : 매달 해야하며, 매월 20일에 차월의 주간보고 회의실을 빔프로젝터가 있는 방으로 예약을 한다.
+13. 현업 승인 필요 업무 상세 : 산출물 검토, WBS 변경, Action Items 및 Issue 조치사항 승인, 투입인력관리대장 변경 등은 반드시 현업 승인이 필요하며, 현업의 승인 내역을 이메일로 증적을 만들어야한다. 
+14. 연차 관리 : 전달받은 연차 일정을 “인력 인별 관리” 파일에 기록
+15. 신규입사자 온보딩 : 현업에게 신규입사자 이름, 직급, 전화번호를 제공하여 계정 생성. 출입증 제공과함께 보안서약서 받아야함. 온보딩참고 PPT 참고하여 온보딩 절차 진행
+16. 퇴사자 오프보딩: 출입증 반납받으면서 보안서약서를 작성받아야함.
 
 Rules:
 - Only answer using facts present above.
-- If a question asks beyond these facts, answer exactly: "I don't know based on the provided information."
+- If a question asks beyond these facts, answer exactly: "저에게 주어진 정보로는 잘 모르겠어요."
 `;
 

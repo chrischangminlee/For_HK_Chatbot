@@ -1,4 +1,4 @@
-**Gemini Grounded Chatbot**
+**HK사업관리 레츠고**
 
 - Purpose: Two-call chatbot that (1) drafts an answer strictly from a provided knowledge base and (2) validates that draft is supported, blocking ungrounded answers.
 - Stack: Vite (vanilla TS), REST calls to Gemini (`model: gemini-2.5-flash`).
@@ -42,4 +42,3 @@
 - 400/401 errors: Confirm `VITE_GEMINI_API_KEY` and model name are valid.
 - CORS: Gemini endpoints support CORS; check referrer restrictions on your key.
 - Blank validation: Validator returns non-JSON if the model ignores JSON; we request `responseMimeType: application/json` to reduce this.
-

@@ -35,8 +35,17 @@ async function onAsk() {
 function init() {
   const { model, keyLoaded } = envSummary();
   setText('model', model);
-  setText('knowledge-preview', KNOWLEDGE.trim());
   $('ask')!.addEventListener('click', onAsk);
+  const textarea = document.getElementById('question') as HTMLTextAreaElement;
+  textarea.addEventListener('keydown', (e: KeyboardEvent) => {
+    if (
+      e.key === 'Enter' &&
+      !e.shiftKey && !e.ctrlKey && !e.metaKey && !e.altKey
+    ) {
+      e.preventDefault();
+      onAsk();
+    }
+  });
 }
 
 init();

@@ -1,4 +1,5 @@
 import React, { useMemo, useRef, useState } from 'react'
+import axios from 'axios'
 
 type ApiResponse = {
   verdict: 'approve' | 'revise'
@@ -25,13 +26,8 @@ export default function App() {
     if (!canAsk) return
     setLoading(true)
     try {
-      const res = await fetch('/api/chat', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ context, question, model, temperature })
-      })
-      const data: ApiResponse = await res.json()
-      if (!res.ok) throw new Error(data?.error || 'Request failed')
+      const res = await axios.post<ApiResponse>('/api/chat', { context, question, model, temperature })
+      const data = res.data
 
       setMessages(prev => [...prev, { role: 'user', content: question }, { role: 'assistant', content: data.finalAnswer }])
       setQuestion('')
@@ -108,4 +104,3 @@ export default function App() {
     </div>
   )
 }
-

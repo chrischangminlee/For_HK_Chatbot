@@ -115,7 +115,8 @@
     button:disabled { opacity: 0.6; cursor: not-allowed; }
     .box { min-height: 80px; border: 1px dashed color-mix(in oklab, var(--primary) 35%, canvas); border-radius: 12px; padding: 12px; white-space: pre-wrap; background: color-mix(in oklab, canvas 98%, var(--primary) 3%); }
     .tips { margin: 10px 0 0 0; padding-left: 18px; line-height: 1.7; font-size: 13px; }
-    .tips li { margin: 2px 0; }
+    .tips li { margin: 2px 0; cursor: pointer; padding: 2px 6px; border-radius: 6px; }
+    .tips li:hover { background: color-mix(in oklab, var(--primary) 12%, canvas); }
     code { background: color-mix(in oklab, var(--primary) 16%, canvas); padding: 2px 6px; border-radius: 6px; }
     @media (max-width: 760px) { h1 { font-size: 24px; } }
   </style>

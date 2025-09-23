@@ -46,6 +46,26 @@ function init() {
       onAsk();
     }
   });
+
+  // Make tips clickable to auto-fill the question field
+  const tipItems = document.querySelectorAll<HTMLLIElement>('.tips li');
+  tipItems.forEach((li) => {
+    li.setAttribute('tabindex', '0');
+    li.setAttribute('role', 'button');
+    li.addEventListener('click', () => {
+      const text = (li.textContent || '').trim();
+      textarea.value = text;
+      textarea.focus();
+      // Place caret at end
+      textarea.selectionStart = textarea.selectionEnd = text.length;
+    });
+    li.addEventListener('keydown', (e: KeyboardEvent) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        li.click();
+      }
+    });
+  });
 }
 
 init();

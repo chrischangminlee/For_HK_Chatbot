@@ -16,11 +16,7 @@ function endpoint(model: string, apiKey: string) {
 
 function buildSystemPrompt(knowledge: string) {
   return [
-    'You are a strict, concise assistant.',
-    'Answer the user question using ONLY the facts in the Knowledge Base below.',
-    'If the answer is not fully supported, reply exactly:',
-    '"I don\'t know based on the provided information."',
-    '',
+    'Knowledge Base에 기반하여 최대한 팩트에서 벗어나지 않은 체 답을 해주세요',
     'Knowledge Base:',
     '---',
     knowledge.trim(),
@@ -94,7 +90,7 @@ export async function validateAnswer(
   const url = endpoint(model, apiKey);
 
   const instruction = [
-    'You are a strict validator that checks whether the DRAFT ANSWER is fully grounded in the Knowledge Base.',
+    'DRAFT ANSWER이 Knowledge Base 에 있는 내용과 일관된지 확인하세요.',
     'Rules:',
     '- Only accept statements present in the Knowledge Base.',
     '- If any part is unsupported, set is_supported=false and list issues.',

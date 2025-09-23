@@ -1,56 +1,45 @@
-**Context-Only Chatbot (Validated, Gemini) — Streamlit (Docker)**
+**Gemini Grounded Chatbot**
 
-- A Streamlit chatbot that answers strictly from a provided context/knowledge base.
-- Two-step pipeline: (1) Responder drafts an answer, (2) Validator checks it against the context and approves/revises.
-- Pure Python runtime (no Node). Uses Google Gemini via `google-generativeai` in Streamlit.
-- Fixed model: `gemini-2.5-flash`. Temperature is fixed internally (no UI control).
-- Reads the API key from `VITE_GEMINI_API_KEY` (preferred). Local fallbacks: `GEMINI_API_KEY` or `GOOGLE_API_KEY`.
+- Purpose: Two-call chatbot that (1) drafts an answer strictly from a provided knowledge base and (2) validates that draft is supported, blocking ungrounded answers.
+- Stack: Vite (vanilla TS), REST calls to Gemini (`model: gemini-2.5-flash`).
 
-**Quickstart**
-- Python 3.10+ recommended.
-- Set env var: `export VITE_GEMINI_API_KEY=your_gemini_key` (or `GEMINI_API_KEY`/`GOOGLE_API_KEY` locally)
-- Install deps: `pip install -r requirements.txt`
-- Run locally: `streamlit run streamlit_app.py`
+**Quick Start**
+- Copy `.env.example` to `.env` and set `VITE_GEMINI_API_KEY`.
+- Optionally set `VITE_GEMINI_MODEL` (defaults to `gemini-2.5-flash`).
+- Edit `src/knowledge.ts` and paste your knowledge in the `KNOWLEDGE` string.
+- Run: `npm install` then `npm run dev`.
 
-**Usage**
-- In the sidebar, paste your authoritative Context/Knowledge Base.
-- Ask a question in the chat box.
-- The model will either answer from the context or say it doesn't know. The Validator ensures the final answer is context-only.
+**Two-Step Flow**
+- Step 1 (Draft): `src/gemini.ts#generateAnswer` uses a system prompt that enforces “only use Knowledge Base; otherwise say I don't know”.
+- Step 2 (Validate): `src/gemini.ts#validateAnswer` asks Gemini to return strict JSON verdict (`is_supported`, `issues`, `adjusted_answer`).
+- UI shows both; when “Block ungrounded answers” is on, final output uses `adjusted_answer` or a fallback refusal.
 
-**Two-Step Design**
-- Responder: Uses only the provided context to draft an answer. If unsupported, responds with "I don't know based on the provided context.".
-- Validator: Verifies the draft is fully supported by the same context. If any part isn’t, it revises to a safe, context-only answer or returns "I don't know based on the provided context.". The validator requests strict JSON using Gemini's `response_mime_type`.
+**Security Note**
+- Client-side API keys are exposed in bundled JS for static hosting (GitHub Pages). If you must ship a key:
+  - Add strict HTTP referrer restrictions for your domain in Google Cloud Console.
+  - Consider a lightweight server/proxy to keep the key private.
 
-**Configuration**
-- Env vars:
-  - `VITE_GEMINI_API_KEY`: Your Gemini API key (use this on Vercel).
-  - Optional local fallbacks: `GEMINI_API_KEY` or `GOOGLE_API_KEY`.
-  
-No model/temperature selection is exposed in the UI; the app uses `gemini-2.5-flash` with a conservative temperature.
+**GitHub Pages Deploy**
+- Set the correct base path for assets when building for Pages.
+  - Copy `.env.production.example` to `.env.production` and set `VITE_BASE_PATH=/your-repo-name/`.
+- Build: `npm run build` (outputs to `dist`).
+- Publish with gh-pages: `npm run deploy` (requires `gh-pages` dev dep installed).
+  - Alternatively push `dist` to a `gh-pages` branch and enable Pages.
 
-**Deploying on Vercel (Docker)**
-- Vercel supports container deployments; we use the provided `Dockerfile` to run Streamlit.
-- Steps:
-  1. Push this repo to GitHub (already done).
-  2. In Vercel, import the repo and choose “Use Dockerfile”.
-  3. Add `VITE_GEMINI_API_KEY` in Project Settings → Environment Variables.
-  4. Deploy. The container listens on `$PORT` (default 3000) and serves the Streamlit app.
+**Config**
+- `VITE_GEMINI_API_KEY`: Gemini API key (required).
+- `VITE_GEMINI_MODEL`: Model ID (default `gemini-2.5-flash`).
+- `VITE_GEMINI_API_HOST`: Default `https://generativelanguage.googleapis.com`.
+- `VITE_GEMINI_API_VERSION`: Default `v1beta`.
+- `VITE_BASE_PATH`: Vite `base` for GitHub Pages, e.g. `/<repo>/`.
 
-Note: If you want to deploy the Vite + Vercel Function flow below, do not use Docker (remove or rename the Dockerfile, or keep the Vite setup in a separate repo).
+**Where to Edit**
+- Knowledge: `src/knowledge.ts`
+- UI/logic: `src/main.ts`
+- Gemini calls: `src/gemini.ts`
 
-Note: This project intentionally does not use Node.js or Vercel Functions to avoid runtime version conflicts and to keep your key server‑side within Python.
+**Troubleshooting**
+- 400/401 errors: Confirm `VITE_GEMINI_API_KEY` and model name are valid.
+- CORS: Gemini endpoints support CORS; check referrer restrictions on your key.
+- Blank validation: Validator returns non-JSON if the model ignores JSON; we request `responseMimeType: application/json` to reduce this.
 
-If Vercel’s container option isn’t available, alternatives:
-- Streamlit Community Cloud (works great for Streamlit apps).
-- Fly.io, Render, or similar PaaS with Docker support.
-
-**Files**
-- `streamlit_app.py`: The Streamlit app (two-step respond+validate flow, Gemini SDK).
-- `requirements.txt`: Python dependencies (Streamlit + google-generativeai).
-- `Dockerfile`: Container for Streamlit runtime (uses `$PORT`).
-- `.env.example`: Sample showing required env vars.
-- `web/`: Optional Vite + React SPA (not used in Docker deployment).
-
-**Notes**
-- The app intentionally does not send prior chat history back to the model—only your question and the current context—to enforce strict context-only answers.
-- You can enable "Show validator details" in the sidebar to debug validation decisions.

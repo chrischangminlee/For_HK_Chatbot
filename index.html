@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Gemini Grounded Chatbot</title>
+    <meta name="description" content="Two-step grounded chatbot using Gemini." />
+    <link rel="icon" href="data:," />
+  </head>
+  <body>
+    <div id="app">
+      <header class="header">
+        <h1>Gemini Grounded Chatbot</h1>
+        <div class="env-row">
+          <span>Model:</span>
+          <code id="model"></code>
+          <span class="dot">•</span>
+          <span>API key:</span>
+          <code id="key-status">not detected</code>
+        </div>
+      </header>
+
+      <section class="panel">
+        <details open>
+          <summary>Knowledge Base (from code)</summary>
+          <pre id="knowledge-preview" class="kb"></pre>
+        </details>
+      </section>
+
+      <section class="panel">
+        <label for="question">Your question</label>
+        <textarea id="question" rows="5" placeholder="Ask a question strictly answerable from the Knowledge Base..."></textarea>
+        <div class="row">
+          <label class="checkbox">
+            <input type="checkbox" id="block-unsupported" checked />
+            Block ungrounded answers (use validator)
+          </label>
+          <button id="ask">Ask</button>
+        </div>
+      </section>
+
+      <section class="panel results">
+        <div class="col">
+          <h3>Step 1 — Draft Answer</h3>
+          <div id="draft" class="box mono"></div>
+        </div>
+        <div class="col">
+          <h3>Step 2 — Validation</h3>
+          <div id="validation" class="box mono"></div>
+        </div>
+      </section>
+
+      <section class="panel">
+        <h3>Final Output</h3>
+        <div id="final" class="box"></div>
+      </section>
+    </div>
+
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+  <style>
+    :root { color-scheme: light dark; }
+    * { box-sizing: border-box; }
+    body { margin: 0; font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Noto Sans, Ubuntu, Cantarell, Helvetica, Arial, Apple Color Emoji, Segoe UI Emoji; }
+    #app { max-width: 960px; margin: 0 auto; padding: 24px; }
+    .header { display: flex; align-items: baseline; gap: 16px; justify-content: space-between; flex-wrap: wrap; }
+    h1 { margin: 0 0 8px 0; font-size: 22px; }
+    .env-row { opacity: 0.8; display: flex; align-items: center; gap: 8px; font-size: 13px; }
+    .dot { opacity: 0.5; }
+    .panel { border: 1px solid color-mix(in oklab, canvastext 15%, canvas); border-radius: 10px; padding: 16px; margin: 14px 0; background: color-mix(in oklab, canvas 92%, canvastext 3%); }
+    label { display: block; font-weight: 600; margin-bottom: 8px; }
+    textarea { width: 100%; padding: 10px; border-radius: 8px; border: 1px solid color-mix(in oklab, canvastext 15%, canvas); background: canvas; color: canvastext; font-family: inherit; }
+    .row { display: flex; align-items: center; justify-content: space-between; margin-top: 10px; }
+    .checkbox { display: flex; align-items: center; gap: 8px; font-size: 14px; }
+    button { padding: 10px 16px; border-radius: 8px; border: 1px solid transparent; background: #2563eb; color: white; font-weight: 600; cursor: pointer; }
+    button:disabled { opacity: 0.6; cursor: not-allowed; }
+    .results { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
+    .col h3 { margin: 0 0 8px 0; font-size: 16px; }
+    .box { min-height: 80px; border: 1px dashed color-mix(in oklab, canvastext 20%, canvas); border-radius: 8px; padding: 10px; white-space: pre-wrap; }
+    .mono { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; font-size: 13px; }
+    .kb { max-height: 240px; overflow: auto; background: canvas; border: 1px solid color-mix(in oklab, canvastext 20%, canvas); border-radius: 8px; padding: 10px; }
+    code { background: color-mix(in oklab, canvas 85%, canvastext 5%); padding: 1px 4px; border-radius: 4px; }
+    @media (max-width: 760px) { .results { grid-template-columns: 1fr; } }
+  </style>
+</html>
+

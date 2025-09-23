@@ -8,6 +8,10 @@ import google.generativeai as genai
 
 st.set_page_config(page_title="Context-Only Chatbot (Validated)", page_icon="🤖", layout="centered")
 
+# Fixed model and temperature (no UI selection)
+MODEL_NAME = "gemini-2.5-flash"
+TEMPERATURE = 0.2
+
 
 def ensure_gemini_configured() -> None:
     """Configure Gemini SDK; check for API key in env vars.
@@ -51,30 +55,28 @@ def build_validator_system_prompt(context: str) -> str:
     )
 
 
-def call_responder(model_name: str, temperature: float, context: str, user_question: str) -> str:
+def call_responder(context: str, user_question: str) -> str:
     system_prompt = build_context_system_prompt(context)
-    model = genai.GenerativeModel(model_name=model_name, system_instruction=system_prompt)
+    model = genai.GenerativeModel(model_name=MODEL_NAME, system_instruction=system_prompt)
     response = model.generate_content(
         user_question,
-        generation_config=genai.types.GenerationConfig(temperature=temperature),
+        generation_config=genai.types.GenerationConfig(temperature=TEMPERATURE),
     )
     return (response.text or "").strip()
 
 
 def call_validator(
-    model_name: str,
-    temperature: float,
     context: str,
     user_question: str,
     draft_answer: str,
 ) -> Dict[str, Any]:
     system_prompt = build_validator_system_prompt(context)
     payload = f"Question:\n{user_question.strip()}\n\nDraft Answer:\n{draft_answer.strip()}"
-    model = genai.GenerativeModel(model_name=model_name, system_instruction=system_prompt)
+    model = genai.GenerativeModel(model_name=MODEL_NAME, system_instruction=system_prompt)
     response = model.generate_content(
         payload,
         generation_config=genai.types.GenerationConfig(
-            temperature=min(temperature, 0.3),
+            temperature=min(TEMPERATURE, 0.3),
             response_mime_type="application/json",
         ),
     )
@@ -112,20 +114,7 @@ def main():
     st.caption("Two-step: Respond → Validate against provided context.")
 
     with st.sidebar:
-        st.subheader("Settings")
-        model_name = st.selectbox(
-            "Gemini Model",
-            options=[
-                "gemini-1.5-flash",
-                "gemini-1.5-flash-8b",
-                "gemini-1.5-pro",
-            ],
-            index=0,
-            help="Pick a capable, cost-effective Gemini model.",
-        )
-        temperature = st.slider("Temperature", 0.0, 1.0, 0.2, 0.05)
-
-        st.divider()
+        st.subheader("Context")
         st.session_state.context = st.text_area(
             "Context / Knowledge Base",
             value=st.session_state.context,
@@ -156,8 +145,6 @@ def main():
             with st.spinner("Generating draft answer…"):
                 ensure_gemini_configured()
                 draft = call_responder(
-                    model_name=model_name,
-                    temperature=temperature,
                     context=st.session_state.context,
                     user_question=user_input,
                 )
@@ -166,8 +153,6 @@ def main():
 
             with st.spinner("Validating against the provided context…"):
                 verdict = call_validator(
-                    model_name=model_name,
-                    temperature=temperature,
                     context=st.session_state.context,
                     user_question=user_input,
                     draft_answer=draft,

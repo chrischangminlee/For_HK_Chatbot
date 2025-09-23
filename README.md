@@ -3,6 +3,7 @@
 - A Streamlit chatbot that answers strictly from a provided context/knowledge base.
 - Two-step pipeline: (1) Responder drafts an answer, (2) Validator checks it against the context and approves/revises.
 - Pure Python runtime (no Node). Uses Google Gemini via `google-generativeai` in Streamlit.
+- Fixed model: `gemini-2.5-flash`. Temperature is fixed internally (no UI control).
 - Reads the API key from `VITE_GEMINI_API_KEY` (preferred). Local fallbacks: `GEMINI_API_KEY` or `GOOGLE_API_KEY`.
 
 **Quickstart**
@@ -24,9 +25,8 @@
 - Env vars:
   - `VITE_GEMINI_API_KEY`: Your Gemini API key (use this on Vercel).
   - Optional local fallbacks: `GEMINI_API_KEY` or `GOOGLE_API_KEY`.
-- Sidebar settings:
-  - Gemini model selection (defaults to `gemini-1.5-flash`).
-  - Temperature.
+  
+No model/temperature selection is exposed in the UI; the app uses `gemini-2.5-flash` with a conservative temperature.
 
 **Deploying on Vercel (Docker)**
 - Vercel supports container deployments; we use the provided `Dockerfile` to run Streamlit.

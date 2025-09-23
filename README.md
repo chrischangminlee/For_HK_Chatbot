@@ -29,6 +29,7 @@ This app uses a single model call with a strict system prompt to keep responses 
 - `VITE_GEMINI_MODEL`: Model ID (default `gemini-2.5-flash`).
 - `VITE_GEMINI_API_HOST`: Default `https://generativelanguage.googleapis.com`.
 - `VITE_GEMINI_API_VERSION`: Default `v1beta`.
+- `VITE_GEMINI_MAX_OUTPUT_TOKENS`: Optional cap for response length. If unset, the API default is used. Set to a positive integer (e.g., `2048`) to increase the maximum.
 - `VITE_BASE_PATH`: Vite `base` for GitHub Pages, e.g. `/<repo>/`.
 
 **Where to Edit**

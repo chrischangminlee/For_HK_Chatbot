@@ -3,6 +3,13 @@ import type { GenerateOptions } from './types';
 const DEFAULT_MODEL = (import.meta.env.VITE_GEMINI_MODEL as string) || 'gemini-2.5-flash';
 const API_HOST = (import.meta.env.VITE_GEMINI_API_HOST as string) || 'https://generativelanguage.googleapis.com';
 const API_VERSION = (import.meta.env.VITE_GEMINI_API_VERSION as string) || 'v1beta';
+const ENV_MAX_TOKENS_RAW =
+  (import.meta.env.VITE_GEMINI_MAX_OUTPUT_TOKENS as string) ||
+  (import.meta.env.VITE_GEMINI_MAX_TOKENS as string) ||
+  '';
+const ENV_MAX_TOKENS = Number.isFinite(Number(ENV_MAX_TOKENS_RAW))
+  ? Number(ENV_MAX_TOKENS_RAW)
+  : undefined;
 
 function getApiKey(override?: string) {
   return (override || (import.meta.env.VITE_GEMINI_API_KEY as string) || '').trim();
@@ -67,17 +74,26 @@ export async function generateAnswer(
   const url = endpoint(model, apiKey);
 
   const systemInstruction = { role: 'system', parts: [{ text: buildSystemPrompt(knowledge) }] };
+  const maxOutputTokens =
+    (typeof opts.maxOutputTokens === 'number' && opts.maxOutputTokens > 0)
+      ? opts.maxOutputTokens
+      : (typeof ENV_MAX_TOKENS === 'number' && ENV_MAX_TOKENS > 0 ? ENV_MAX_TOKENS : undefined);
+
+  const generationConfig: Record<string, any> = {
+    temperature: opts.temperature ?? 0.2,
+    topK: 40,
+    topP: 0.95,
+  };
+  if (typeof maxOutputTokens === 'number') {
+    generationConfig.maxOutputTokens = maxOutputTokens;
+  }
+
   const body = {
     systemInstruction,
     contents: [
       { role: 'user', parts: [{ text: `Question: ${question}` }] }
     ],
-    generationConfig: {
-      temperature: opts.temperature ?? 0.2,
-      topK: 40,
-      topP: 0.95,
-      maxOutputTokens: 512
-    }
+    generationConfig
   } as const;
 
   const resp = await postJSON(url, body);

@@ -20,8 +20,8 @@
       <p class="subnote">고객사 명, 고객사 특정 업무 과정 등은 전혀 포함되지않은 일반적인 사업관리 내용만 넣었기떄문에 보안 이슈는 없습니다.</p>
 
       <section class="panel">
-        <details id="tips-details">
-          <summary>이런 질문을 해보세요 (질문 클릭하면 아래 질문 섹션 자동 채워짐):</summary>
+        <details id="tips-details" open>
+          <summary>이런 질문을 해보세요 <span class="tips-note">(질문 클릭하면 아래 질문 섹션 자동 채워짐)</span>:</summary>
           <ul class="tips">
             <li>사업관리 업무는 무엇이 있나요?</li>
             <li>매일 하는 업무는 무엇이 있나요?</li>
@@ -117,6 +117,7 @@
     .tips { margin: 10px 0 0 0; padding-left: 18px; line-height: 1.7; font-size: 13px; }
     .tips li { margin: 2px 0; cursor: pointer; padding: 2px 6px; border-radius: 6px; }
     .tips li:hover { background: color-mix(in oklab, var(--primary) 12%, canvas); }
+    .tips-note { color: red; }
     code { background: color-mix(in oklab, var(--primary) 16%, canvas); padding: 2px 6px; border-radius: 6px; }
     @media (max-width: 760px) { h1 { font-size: 24px; } }
   </style>

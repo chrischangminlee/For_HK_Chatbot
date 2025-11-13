@@ -10,51 +10,13 @@
   </head>
   <body>
     <div id="app">
-      <header class="header">
-        <h1>창민리의 사업관리 레츠고</h1>
-        <div class="env-row">
-          <span>Model:</span>
-          <code id="model"></code>
-        </div>
-      </header>
-      <p class="subnote">고객사 명, 고객사 특정 업무 과정 등은 전혀 포함되지않은 일반적인 사업관리 내용만 넣었기떄문에 보안 이슈는 없습니다.</p>
-
-      <section class="panel">
-        <details id="tips-details" open>
-          <summary>이런 질문을 해보세요 <span class="tips-note">(질문 클릭하면 아래 질문 섹션 자동 채워짐)</span>:</summary>
-          <ul class="tips">
-            <li>사업관리 업무는 무엇이 있나요?</li>
-            <li>매일 하는 업무는 무엇이 있나요?</li>
-            <li>매주 하는 업무는 무엇이 있나요?</li>
-            <li>매달 하는 업무는 무엇이 있나요?</li>
-            <li>수시적으로 해야하는 업무는 무엇이 있나요?</li>
-            <li>출석부 관리 업무는 어떻게 하나요?</li>
-            <li>일정 관리 업무는 어떻게 하나요?</li>
-            <li>주간보고 업무는 어떻게 하나요?</li>
-            <li>출석부 생성 업무는 어떻게 하나요?</li>
-            <li>현업 승인 필요 업무는 어떻게 하나요?</li>
-            <li>연차 관리는 어떻게 하나요?</li>
-            <li>신규입사자 온보딩은 어떻게하나요?</li>
-            <li>퇴사자 오프보딩은 어떻게 하나요?</li>
-          </ul>
-        </details>
-      </section>
-
-      <section class="panel">
-        <label for="question">Your question</label>
-        <textarea id="question" rows="5" placeholder="사업관리 업무에 대해서 물어보세요"></textarea>
-        <div class="row">
-          <button id="ask">Ask</button>
-        </div>
-      </section>
-
-      <section class="panel">
-        <h3>Final Output</h3>
-        <div id="final" class="box"></div>
-      </section>
+      <div class="shutdown">
+        <p>
+          AI Chatbot을 통한 인수인계 페이지는 이제 문을 닫습니다.
+          AI 개발에 대해 알고싶으시면 {<a href="https://www.linkedin.com/in/chrislee9407/" target="_blank" rel="noopener noreferrer">이창민</a>}을 찾아주세요
+        </p>
+      </div>
     </div>
-
-    <script type="module" src="/src/main.ts"></script>
   </body>
   <style>
     :root {
@@ -73,7 +35,9 @@
         linear-gradient(180deg, color-mix(in oklab, canvas 97%, canvastext 1%), color-mix(in oklab, canvas 94%, canvastext 2%));
       color: canvastext;
     }
-    #app { max-width: 960px; margin: 0 auto; padding: 28px; }
+    #app { min-height: 100vh; max-width: 960px; margin: 0 auto; padding: 28px; display: flex; align-items: center; justify-content: center; }
+    .shutdown { text-align: center; font-size: 18px; line-height: 1.6; }
+    .shutdown a { color: var(--primary-700); text-decoration: underline; font-weight: 700; }
     .header { display: flex; align-items: baseline; gap: 16px; justify-content: space-between; flex-wrap: wrap; }
     h1 {
       margin: 0 0 6px 0; font-size: 28px; line-height: 1.2;
